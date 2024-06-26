@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Canvas Fingerprint Details</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      h1,
+      h2 {
+        margin-bottom: 10px;
+      }
+      img {
+        max-width: 100%;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Canvas Fingerprint Details</h1>
+
+    <h2>Canvas Fingerprint</h2>
+    <img src="" id="canvasFingerprint" alt="Canvas Fingerprint" />
+
+    <h2>Hash ID</h2>
+    <span id="hashID"></span>
+
+    <script>
+      // Retrieve stored data
+      let canvasFingerprint = localStorage.getItem("canvasFingerprint");
+      let hash = localStorage.getItem("canvasHash");
+
+      // Display fingerprint and hash ID
+      document.getElementById("canvasFingerprint").src = canvasFingerprint;
+      document.getElementById("hashID").innerText = hash;
+    </script>
+  </body>
+</html>

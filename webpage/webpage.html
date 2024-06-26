@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Fingerprinting Example</title>
+</head>
+<body>
+    <h1>Fingerprinting Example</h1>
+
+    <div>
+        <h2>Canvas Fingerprint</h2>
+        <button onclick="viewCanvasFingerprint()">View Canvas Fingerprint</button>
+    </div>
+
+    <div>
+        <h2>Audio Fingerprint</h2>
+        <button onclick="viewAudioFingerprint()">View Audio Fingerprint</button>
+    </div>
+
+    <div>
+        <h2>WebGL Fingerprint</h2>
+        <button onclick="viewWebGLFingerprint()">View WebGL Fingerprint</button>
+    </div>
+
+    <script>
+        // Canvas fingerprinting
+        function getCanvasFingerprint() {
+            var canvas = document.createElement("canvas");
+            var ctx = canvas.getContext("2d");
+            ctx.textBaseline = "top";
+            ctx.font = "16px Arial";
+            ctx.textBaseline = "alphabetic";
+            ctx.fillStyle = "#f60";
+            ctx.fillRect(125, 1, 62, 20);
+            ctx.fillStyle = "#069";
+            ctx.fillText("Fingerprinting", 2, 15);
+            ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+            ctx.fillText("Example", 4, 17);
+            return canvas.toDataURL();
+        }
+
+        // Audio fingerprinting
+        async function getAudioFingerprint() {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const analyser = audioCtx.createAnalyser();
+            oscillator.type = "triangle";
+            oscillator.frequency.setValueAtTime(10000, audioCtx.currentTime);
+            oscillator.connect(analyser);
+            analyser.connect(audioCtx.destination);
+            oscillator.start(0);
+            const array = new Uint8Array(analyser.frequencyBinCount);
+            analyser.getByteFrequencyData(array);
+            oscillator.stop();
+            return array;
+        }
+
+        // WebGL fingerprinting
+        function getWebGLFingerprint() {
+            var canvas = document.createElement("canvas");
+            var gl = canvas.getContext("webgl");
+            var debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+            return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+        }
+
+        // Function to calculate hash
+        function calculateHash(data) {
+            let hash = 0;
+            if (data.length === 0) return hash;
+            for (let i = 0; i < data.length; i++) {
+                let char = data.charCodeAt(i);
+                hash = (hash << 5) - hash + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            return hash;
+        }
+
+        // Navigate to Canvas Fingerprint page
+        function viewCanvasFingerprint() {
+            let fingerprint = getCanvasFingerprint();
+            let hash = calculateHash(fingerprint);
+            localStorage.setItem('canvasFingerprint', fingerprint);
+            localStorage.setItem('canvasHash', hash);
+            window.location.href = 'canvas.html';
+        }
+
+        // Navigate to Audio Fingerprint page
+        async function viewAudioFingerprint() {
+            let fingerprint = await getAudioFingerprint();
+            let hash = calculateHash(JSON.stringify(fingerprint));
+            localStorage.setItem('audioFingerprint', JSON.stringify(fingerprint));
+            localStorage.setItem('audioHash', hash);
+            window.location.href = 'audio.html';
+        }
+
+        // Navigate to WebGL Fingerprint page
+        function viewWebGLFingerprint() {
+            let fingerprint = getWebGLFingerprint();
+            let hash = calculateHash(fingerprint);
+            localStorage.setItem('webGLFingerprint', fingerprint);
+            localStorage.setItem('webGLHash', hash);
+            window.location.href = 'webgl.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Audio Fingerprint Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            margin-bottom: 10px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Audio Fingerprint Details</h1>
+
+    <h2>Audio Fingerprint</h2>
+    <pre id="audioFingerprint"></pre>
+
+    <h2>Hash ID</h2>
+    <span id="hashID"></span>
+
+    <script>
+        // Retrieve stored data
+        let audioFingerprint = JSON.parse(localStorage.getItem('audioFingerprint'));
+        let hash = localStorage.getItem('audioHash');
+
+        // Display fingerprint and hash ID
+        document.getElementById('audioFingerprint').textContent = JSON.stringify(audioFingerprint, null, 2);
+        document.getElementById('hashID').innerText = hash;
+    </script>
+</body>
+</html>
